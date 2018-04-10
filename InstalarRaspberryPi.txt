@@ -1,0 +1,87 @@
+
+1) Use o seu PC para acessar a Raspberry Pi usando ssh
+	FORMAS DE ACESSAR
+	A) Raspberry conectada no mesmo access point que o PC
+	   Descubra o IP que a Raspberry recebeu (por exemplo acessando o access point)
+	B) Raspberry conectada por cabo ethernet no PC
+		use o comando arp -a para saber o IP dos computadores conectados no PC
+	ex: 10.42.0.92 e  acesse por ssh o 10.42.0.92
+	
+	
+2) Instale o NodeJS para ARMv7 https://nodejs.org/en/
+   instale o servidorNode.zip em algum diretorio da sua Raspberry
+   e rode o servidor usando:
+   node servidor.js
+   ou ainda crie uma regra no cron para rodar o servidor durante o boot (ou ainda use crie um script em /etc/init.d/)
+   
+3) Modifique o /etc/network/interfaces:
+----------------------------------
+    #loopback adapter
+    auto lo
+    iface lo inet loopback
+
+    #wired adapter
+    iface eth0 inet dhcp
+
+
+
+# wireless
+allow-hotplug wlan0
+iface wlan0 inet static
+	address 10.10.0.1
+	netmask 255.255.255.0  
+	network 10.10.1.0
+        #gateway 10.10.0.1
+	broadcast 10.10.1.255
+
+---------------------------------------------
+
+4) No caso específico do dispositivo rtl8188 foi necessário instalar o driver e compilá-lo pois o pacote instalado automaticamente não funcionava:
+   
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install libnl-genl-3-dev libcurl4-openssl-dev
+git clone https://github.com/lostincynicism/hostapd-rtl8188.git
+cd hostapd-rtl8188
+cd hostapd
+sudo make
+sudo make install
+cd ..
+sudo mv hostapd /usr/sbin/hostapd.rtl8188
+sudo mv /usr/sbin/hostapd /usr/sbin/hostapd.old
+sudo ln -sf /usr/sbin/hostapd.rtl8188 /usr/sbin/hostapd
+sudo chown root.root /usr/sbin/hostapd
+sudo chmod 755 /usr/sbin/hostapd
+
+5) Modifique o  /etc/hostapd/hostapd.conf para configurar o seu WiFi
+voce precisa saber qual é o seu driver WiFi e criar um ID e senha para o seu accesspoint (MEU_ID, MINHA_SENHA)
+
+ 
+#driver=rtl871xdrv  ---
+driver=nl80211
+
+wmm_enabled=0
+macaddr_acl=0 
+
+
+interface=wlan0
+ssid=MEU_ID   
+wpa_passphrase=MINHA_SENHA
+
+channel=10             # the channel to use, 0 means the AP will search for the channel with the least interferences 
+country_code=BR       # the country code
+wmm_enabled=0         # QoS support
+auth_algs=1           # 1=wpa, 2=wep, 3=both
+wpa=2                 # WPA2 only
+wpa_key_mgmt=WPA-PSK
+#wpa_pairwise=CCMP
+rsn_pairwise=CCMP
+#rsn_preauth=1
+
+hw_mode=g
+
+wmm_enabled=1
+#ieee80211n=1
+#ht_capab=[HT40+][SHORT-GI-40][DSSS_CCK-40][SHORT-GI-20][MAX-AMSDU-7935]
+
+

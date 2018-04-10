@@ -1,0 +1,4 @@
+Para a seção demo será utilizada uma Raspberry Pi 2 com o mesmo 
+software instalado que na Estação meteorológica. A estação não pode ser apresentada em virtude dos problemas de descolamento da mesma (muito grande e frágil para transporte). 
+
+Serão também apresentados os módulos sensores e será possivel observar que a raspberry capta os dados enviados por wireless dos módulos sensores.

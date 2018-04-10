@@ -1,0 +1,9 @@
+
+1) Acesse, baixe e instale o ambiente do Arduino (https://www.arduino.cc/)
+
+2) Rode o ambiente do arduino
+
+3) Descompacte o sensor_distancia.zip e sensor_temperatura.zip
+
+4) abra os projetos e modifique o node da Rede/senha. Compile e faca upload no ESP
+
