@@ -75,13 +75,15 @@ void setup(void)
 {
    pinMode(TRIGGER, OUTPUT);
    pinMode(ECHO, INPUT);
+
+   dist = capturaDistancia();
+   criaJSON("distancia",dist,buffer);
+   conecta();
+   enviaDado(buffer);
+   desconecta();
+   ESP.deepSleep(50e6); // 50 segundos
 }
 void loop (void)
 {
-  dist = capturaDistancia();
-  criaJSON("distancia",dist,buffer);
-  conecta();
-  enviaDado(buffer);
-  desconecta();
-  delay(50000);
+  
 }

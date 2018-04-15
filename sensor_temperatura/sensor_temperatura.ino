@@ -56,13 +56,14 @@ void desconecta()
 }
 void setup(void)
 {
-}
-void loop (void)
-{
   conecta();
   temp = DS18B20_Captura_temperatura();
   criaJSON("temperatura",temp,buffer);
   enviaDado(buffer);
   desconecta();
-	delay(50000);
+  ESP.deepSleep(50e6); // 50 segundos
+}
+void loop (void)
+{
+ 
 }
